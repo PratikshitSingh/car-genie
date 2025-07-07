@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Car Genie</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    #messages { height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 5px; }
+    .msg { margin: 5px 0; }
+    .user { color: blue; }
+    .bot { color: green; }
+  </style>
+</head>
+<body>
+  <h1>Car Genie</h1>
+  <div id="messages"></div>
+  <input id="input" type="text" placeholder="Ask for cars..." style="width:80%"> <button onclick="send()">Send</button>
+  <script>
+    async function send() {
+      const input = document.getElementById('input');
+      const message = input.value;
+      if (!message) return;
+      appendMessage('user', message);
+      input.value = '';
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+      });
+      const data = await res.json();
+      appendMessage('bot', data.reply);
+      if (data.cars) {
+        appendMessage('bot', 'Found ' + data.cars.length + ' cars');
+      }
+    }
+    function appendMessage(role, text) {
+      const div = document.getElementById('messages');
+      const msg = document.createElement('div');
+      msg.className = 'msg ' + role;
+      msg.textContent = role + ': ' + text;
+      div.appendChild(msg);
+      div.scrollTop = div.scrollHeight;
+    }
+  </script>
+</body>
+</html>
