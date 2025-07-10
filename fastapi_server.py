@@ -6,6 +6,8 @@ import os
 from dotenv import load_dotenv
 from typing import List, Dict, Any
 import openai
+import asyncio
+import logging
 
 load_dotenv()
 
@@ -19,11 +21,12 @@ async def search_cargurus(query: str) -> List[Dict[str, Any]]:
     if not api_key:
         return []
     try:
-        resp = await shared_client.get(
-            "https://api.cargurus.com/v1/listings",
-            params={"query": query, "api_key": api_key},
-            timeout=10,
-        )
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(
+                "https://api.cargurus.com/v1/listings",
+                params={"query": query, "api_key": api_key},
+                timeout=10,
+            )
             resp.raise_for_status()
             data = resp.json()
             return data.get("results", [])
