@@ -28,7 +28,7 @@ async def search_cargurus(query: str) -> List[Dict[str, Any]]:
             data = resp.json()
             return data.get("results", [])
     except Exception as e:
-        print("Cargurus error", e)
+        logging.error("Cargurus error: %s", e)
         return []
 
 async def search_carfax(query: str) -> List[Dict[str, Any]]:
