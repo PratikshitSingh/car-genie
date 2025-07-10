@@ -19,12 +19,11 @@ async def search_cargurus(query: str) -> List[Dict[str, Any]]:
     if not api_key:
         return []
     try:
-        async with httpx.AsyncClient() as client:
-            resp = await client.get(
-                "https://api.cargurus.com/v1/listings",
-                params={"query": query, "api_key": api_key},
-                timeout=10,
-            )
+        resp = await shared_client.get(
+            "https://api.cargurus.com/v1/listings",
+            params={"query": query, "api_key": api_key},
+            timeout=10,
+        )
             resp.raise_for_status()
             data = resp.json()
             return data.get("results", [])
