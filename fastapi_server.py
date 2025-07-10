@@ -68,7 +68,6 @@ async def search_carsdotcom(query: str) -> List[Dict[str, Any]]:
         return []
 
 async def search_all_sources(query: str) -> List[Dict[str, Any]]:
-    import asyncio
     results = await asyncio.gather(
         search_cargurus(query),
         search_carfax(query),
