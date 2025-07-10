@@ -95,7 +95,7 @@ async def chat(req: ChatRequest):
         return {"reply": reply}
     except Exception as e:
         print(e)
-        raise HTTPException(status_code=500, detail="Error processing request")
+        raise HTTPException(status_code=500, detail="Error processing request") from e
 
 app.mount("/", StaticFiles(directory="public", html=True), name="static")
 
